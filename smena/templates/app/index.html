@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load django_bootstrap5 %}
+{% block content %}
+  <div class="container">
+    <div style="display: flex; justify-content: space-between;">
+
+        <a href="{% url 'main:createworker'%}">{%  bootstrap_button content="Добавить подчиненных" %}</a>
+        <a href="{% url 'main:choise'%}">{%  bootstrap_button content="Уволить подчиненных" %}</a>
+        <a href="{% url 'main:create' %}" style="text-align: center;">{%  bootstrap_button content="Создать таблицу" %}</a>
+    </div>
+
+    <ul class="nav nav-tabs" style="padding-top: 15px;">
+        {% for table in tables %}
+      <li class="nav-item">
+        <a class="nav-link {% if main %}{% if table == main %}active{% endif %}{% endif %}" data-bs-toggle="tab" href="{% url 'main:show' table.id  %}">{{ table.date|date:"F Y" }}  {{ table.name }}</a>
+      </li>
+        {% endfor %}
+    </ul>
+    {% if main %}
+    {% if main.is_exists %}
+    <div class="tab-content">
+      <div class="tab-pane fade show active" id="tab1">
+        <h4>График {{ main.date|date:"F Y" }}</h4>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Работник</th>
+                    {% for day in days %}
+                        <th>{{ day }}</th>
+                    {% endfor %}
+                    <th>Отработано</th>
+
+                </tr>
+            
+            </thead>
+            <tbody>
+                {% for worker in workers %}
+                    <tr>
+                        <td>{{ worker.fio }}</td>
+                        {% for day in worker.graphic %}
+                            <td >{{ day }}</td>
+                        {% endfor %}
+                        <td >{{ worker.cur_hours }}</td>
+
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+        </div>
+    </div>
+    {% else %}
+    <a href="{% url 'main:creategraphic' main.id %}">{% bootstrap_button button_type="submit" content="Сформировать график из имеющихся работников" %}</a>
+    {% endif %}
+
+    
+    {% endif %}
+  </div>
+{% endblock %}

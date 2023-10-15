@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% load django_bootstrap5 %}
+{% block content %}
+<ul>
+    {% for i in all %}
+    <div style="justify-content: space-between; display: flex;"><strong>{{ i.fio }} </strong><a href="{% url 'main:delete' i.id %}">{% bootstrap_button button_type="submit"  class="btn-danger" content="Уволить" %}</a></div>
+    {% endfor %}
+</ul>
+
+{% endblock %}
